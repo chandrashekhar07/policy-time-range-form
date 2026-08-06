@@ -1,0 +1,455 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #1a56db;
+  --color-primary-hover: #1647c0;
+  --color-danger: #e02424;
+  --color-danger-light: #fdf2f2;
+  --color-danger-border: #f8b4b4;
+  --color-border: #e5e7eb;
+  --color-surface: #ffffff;
+  --color-bg: #f3f4f6;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-text-subtle: #9ca3af;
+  --color-success: #057a55;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Overlay ─────────────────────────────────────────────────── */
+.form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+
+/* ─── Modal shell ─────────────────────────────────────────────── */
+.form-modal {
+  background: var(--color-surface);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+/* ─── Header ──────────────────────────────────────────────────── */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 24px 18px;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.form-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.form-subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.close-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--color-text-muted);
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+  margin-top: -2px;
+}
+.close-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ─── Scrollable body ─────────────────────────────────────────── */
+.form-sections {
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* ─── Section ─────────────────────────────────────────────────── */
+.rules-section {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.section-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: none;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.section-header:hover {
+  background: #f9fafb;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.section-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-muted);
+}
+
+.rules-count {
+  font-size: 12px;
+  font-weight: 500;
+  background: #f0f4ff;
+  color: var(--color-primary);
+  border: 1px solid #c7d7fc;
+  border-radius: 20px;
+  padding: 2px 10px;
+}
+
+/* ─── Section body ────────────────────────────────────────────── */
+.section-body {
+  padding: 0 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ─── Global error banner ─────────────────────────────────────── */
+.global-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--color-danger-light);
+  border: 1px solid var(--color-danger-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: var(--color-danger);
+  font-weight: 500;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* ─── Coverage bar ───────────────────────────────────────────── */
+.coverage-bar-wrap {
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.coverage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.coverage-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.coverage-pct {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.coverage-pct--ok {
+  color: var(--color-success);
+}
+
+.coverage-bar {
+  position: relative;
+  width: 100%;
+  height: 22px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.coverage-segment {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transition: width 0.2s ease, left 0.2s ease;
+}
+
+.coverage-segment--gap {
+  background: repeating-linear-gradient(
+    45deg,
+    #e5e7eb,
+    #e5e7eb 4px,
+    #f3f4f6 4px,
+    #f3f4f6 8px
+  ) !important;
+}
+
+.coverage-ticks {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  margin-top: 2px;
+}
+
+.coverage-tick {
+  position: absolute;
+  font-size: 10px;
+  color: var(--color-text-subtle);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* ─── Rule row ────────────────────────────────────────────────── */
+.rule-row {
+  padding: 16px 0;
+  border-bottom: 1px dashed var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rule-row:last-of-type {
+  border-bottom: none;
+}
+
+/* ─── Fields ──────────────────────────────────────────────────── */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.field-group.full {
+  width: 100%;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+.field-input::placeholder {
+  color: var(--color-text-subtle);
+}
+.field-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+}
+.field-input--error {
+  border-color: var(--color-danger);
+  background: #fffafa;
+}
+.field-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(224, 36, 36, 0.1);
+}
+
+/* Remove number input arrows */
+.field-input[type='number']::-webkit-inner-spin-button,
+.field-input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.field-input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.fields-row {
+  display: flex;
+  gap: 10px;
+}
+
+.field-error {
+  font-size: 12px;
+  color: var(--color-danger);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.range-error {
+  margin-top: -4px;
+}
+
+/* ─── Delete button ───────────────────────────────────────────── */
+.delete-btn {
+  flex-shrink: 0;
+  width: 34px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #e02424;
+  background: var(--color-danger-light);
+  border: 1px solid var(--color-danger-border);
+  transition: background 0.15s, color 0.15s;
+}
+.delete-btn:hover {
+  background: #fde8e8;
+}
+
+/* ─── Add More ────────────────────────────────────────────────── */
+.add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  border: 1.5px dashed #d1d5db;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: none;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.add-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: #f0f4ff;
+}
+
+/* ─── Footer ──────────────────────────────────────────────────── */
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+  background: #fafafa;
+}
+
+.btn-cancel {
+  height: 36px;
+  padding: 0 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-cancel:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.btn-save {
+  height: 36px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  border: none;
+}
+.btn-save:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 2px 8px rgba(26, 86, 219, 0.25);
+}
+
+/* ─── Success toast ───────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: var(--color-success);
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  animation: slideIn 0.25s ease;
+  z-index: 100;
+}
+@keyframes slideIn {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─── Trigger button ──────────────────────────────────────────── */
+.open-btn {
+  padding: 10px 22px;
+  border-radius: 10px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.open-btn:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(26, 86, 219, 0.3);
+}
