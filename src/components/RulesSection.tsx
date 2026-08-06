@@ -1,6 +1,9 @@
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
 import { Rule, RuleErrors } from '@/types';
 
+type SectionKey = 'daily' | 'weekly';
+type RuleField = Exclude<keyof Rule, 'id'>;
+
 const SEGMENT_COLORS = [
   '#1a56db',
   '#057a55',
@@ -101,15 +104,17 @@ function CoverageBar({ rules, rangeMax }: { rules: Rule[]; rangeMax: number }) {
 }
 
 interface RuleRowProps {
+  section: SectionKey;
   rule: Rule;
   errors: RuleErrors;
-  onChange: (id: string, field: keyof Rule, value: string) => void;
+  onChange: (id: string, field: RuleField, value: string) => void;
+  onTouch: (section: SectionKey, id: string, field: RuleField) => void;
   onDelete: (id: string) => void;
   canDelete: boolean;
   rangeMax: number;
 }
 
-function RuleRow({ rule, errors, onChange, onDelete, canDelete, rangeMax }: RuleRowProps) {
+function RuleRow({ section, rule, errors, onChange, onTouch, onDelete, canDelete, rangeMax }: RuleRowProps) {
   const err = errors[rule.id];
   return (
     <div className="rule-row">
@@ -122,6 +127,8 @@ function RuleRow({ rule, errors, onChange, onDelete, canDelete, rangeMax }: Rule
             placeholder="Enter label"
             value={rule.label}
             onChange={e => onChange(rule.id, 'label', e.target.value)}
+            onBlur={() => onTouch(section, rule.id, 'label')}
+            data-field-path={`${section}:${rule.id}:label`}
           />
           {canDelete && (
             <button
@@ -150,6 +157,8 @@ function RuleRow({ rule, errors, onChange, onDelete, canDelete, rangeMax }: Rule
             step={0.5}
             value={rule.hourFrom}
             onChange={e => onChange(rule.id, 'hourFrom', e.target.value)}
+            onBlur={() => onTouch(section, rule.id, 'hourFrom')}
+            data-field-path={`${section}:${rule.id}:hourFrom`}
           />
           {err?.hourFrom && <p className="field-error">{err.hourFrom}</p>}
         </div>
@@ -165,6 +174,8 @@ function RuleRow({ rule, errors, onChange, onDelete, canDelete, rangeMax }: Rule
             step={0.5}
             value={rule.hourTo}
             onChange={e => onChange(rule.id, 'hourTo', e.target.value)}
+            onBlur={() => onTouch(section, rule.id, 'hourTo')}
+            data-field-path={`${section}:${rule.id}:hourTo`}
           />
           {err?.hourTo && <p className="field-error">{err.hourTo}</p>}
         </div>
@@ -179,6 +190,8 @@ function RuleRow({ rule, errors, onChange, onDelete, canDelete, rangeMax }: Rule
             step={0.1}
             value={rule.multiplier}
             onChange={e => onChange(rule.id, 'multiplier', e.target.value)}
+            onBlur={() => onTouch(section, rule.id, 'multiplier')}
+            data-field-path={`${section}:${rule.id}:multiplier`}
           />
           {err?.multiplier && <p className="field-error">{err.multiplier}</p>}
         </div>
@@ -194,26 +207,30 @@ function RuleRow({ rule, errors, onChange, onDelete, canDelete, rangeMax }: Rule
 
 interface RulesSectionProps {
   title: string;
+  section: SectionKey;
   rules: Rule[];
   errors: RuleErrors;
-  globalError?: string;
+  hint?: string;
   open: boolean;
   rangeMax: number;
   onToggle: () => void;
-  onChange: (id: string, field: keyof Rule, value: string) => void;
+  onChange: (id: string, field: RuleField, value: string) => void;
+  onTouch: (section: SectionKey, id: string, field: RuleField) => void;
   onDelete: (id: string) => void;
   onAdd: () => void;
 }
 
 export function RulesSection({
   title,
+  section,
   rules,
   errors,
-  globalError,
+  hint,
   open,
   rangeMax,
   onToggle,
   onChange,
+  onTouch,
   onDelete,
   onAdd,
 }: RulesSectionProps) {
@@ -229,20 +246,18 @@ export function RulesSection({
 
       {open && (
         <div className="section-body">
-          {globalError && (
-            <div className="global-error">
-              <span>{globalError}</span>
-            </div>
-          )}
-
           <CoverageBar rules={rules} rangeMax={rangeMax} />
+
+          {hint && <p className="coverage-hint">Hint: {hint}</p>}
 
           {rules.map(rule => (
             <RuleRow
               key={rule.id}
+              section={section}
               rule={rule}
               errors={errors}
               onChange={onChange}
+              onTouch={onTouch}
               onDelete={onDelete}
               canDelete={rules.length > 1}
               rangeMax={rangeMax}

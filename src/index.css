@@ -101,6 +101,33 @@ body {
   scroll-behavior: smooth;
 }
 
+.form-actions-zone {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  background: linear-gradient(to top, #fafafa 82%, rgba(250, 250, 250, 0.9) 100%);
+}
+
+.form-error-strip {
+  flex-shrink: 0;
+  margin: 0 24px 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-danger-border);
+  border-radius: 8px;
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.save-reason {
+  margin: 0 24px 8px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.35;
+}
+
 /* ─── Section ─────────────────────────────────────────────────── */
 .rules-section {
   border-bottom: 1px solid var(--color-border);
@@ -151,27 +178,18 @@ body {
   gap: 0;
 }
 
-/* ─── Global error banner ─────────────────────────────────────── */
-.global-error {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  background: var(--color-danger-light);
-  border: 1px solid var(--color-danger-border);
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin-bottom: 14px;
-  font-size: 13px;
-  color: var(--color-danger);
-  font-weight: 500;
-  margin-top: 12px;
-  line-height: 1.5;
-}
-
 /* ─── Coverage bar ───────────────────────────────────────────── */
 .coverage-bar-wrap {
   margin-top: 12px;
   margin-bottom: 4px;
+}
+
+.coverage-hint {
+  margin-top: 4px;
+  margin-bottom: 2px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.4;
 }
 
 .coverage-header {
@@ -373,12 +391,12 @@ body {
 
 /* ─── Footer ──────────────────────────────────────────────────── */
 .form-footer {
+  flex-shrink: 0;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   padding: 16px 24px;
   border-top: 1px solid var(--color-border);
-  flex-shrink: 0;
   background: #fafafa;
 }
 
@@ -416,21 +434,32 @@ body {
   box-shadow: 0 2px 8px rgba(26, 86, 219, 0.25);
 }
 
+.btn-save:disabled {
+  background: #93a4bf;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-save:disabled:hover {
+  background: #93a4bf;
+}
+
 /* ─── Success toast ───────────────────────────────────────────── */
 .toast {
   position: fixed;
-  bottom: 24px;
+  bottom: 20px;
   right: 24px;
   background: #ecfdf5;
   border: 1px solid #a7f3d0;
   color: var(--color-success);
   border-radius: 10px;
-  padding: 12px 18px;
-  font-size: 14px;
+  padding: 8px 12px;
+  font-size: 13px;
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   animation: slideIn 0.25s ease;
   z-index: 100;
+  max-width: 340px;
 }
 @keyframes slideIn {
   from { transform: translateY(16px); opacity: 0; }

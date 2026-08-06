@@ -4,13 +4,12 @@ import { PolicyFormData } from '@/types';
 
 function App() {
   const [open, setOpen] = useState(false);
-  const [toast, setToast] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   function handleSave(data: PolicyFormData) {
     console.log('Saved policy:', data);
-    setOpen(false);
-    setToast(true);
-    setTimeout(() => setToast(false), 2500);
+    setToast('Policy saved. You can keep editing or close when done.');
+    setTimeout(() => setToast(null), 2200);
   }
 
   return (
@@ -22,7 +21,7 @@ function App() {
           Create New Policy
         </button>
       )}
-      {toast && <div className="toast">Policy saved successfully.</div>}
+      {toast && <div className="toast">{toast}</div>}
     </div>
   );
 }
